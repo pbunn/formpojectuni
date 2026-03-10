@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>มีอะไรจะบอก... ❤️</title>
+    <title>You have a message! 💌</title>
     <link href="https://fonts.googleapis.com/css2?family=Mitr:wght@300;500&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -19,19 +19,25 @@
             font-family: 'Mitr', sans-serif;
             background-color: var(--purple-bg);
             transition: background-color 1s ease;
-            overflow: hidden;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
+            overflow: hidden;
         }
 
-        /* --- หน้าใส่รหัส --- */
+        /* --- หน้าถามรหัส --- */
         #passwordPage {
             position: fixed;
             z-index: 100;
             text-align: center;
-            padding: 20px;
+            background: var(--purple-bg);
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
         }
 
         .pass-input {
@@ -40,111 +46,125 @@
             border-radius: 10px;
             border: 2px solid #9370DB;
             text-align: center;
-            outline: none;
             width: 200px;
             margin-bottom: 15px;
+            outline: none;
         }
 
-        /* --- ซองจดหมาย --- */
+        /* --- โครงสร้างซองจดหมาย --- */
         #envelopeContainer {
             display: none;
-            position: relative;
-            z-index: 10;
+            perspective: 1000px;
+            transition: transform 1s ease; /* สำหรับเลื่อนซองลง */
         }
 
         .envelope-wrapper {
             position: relative;
-            width: 300px;
-            height: 200px;
+            width: 320px;
+            height: 220px;
             background-color: var(--envelope-color);
             border-radius: 0 0 5px 5px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: transform 1s ease;
         }
 
+        /* ฝาซอง */
         .envelope-wrapper::before {
             content: "";
             position: absolute;
             top: 0;
-            z-index: 5;
-            border-top: 110px solid #ffb3c1;
-            border-left: 150px solid transparent;
-            border-right: 150px solid transparent;
+            z-index: 10;
+            border-top: 120px solid #ffb3c1;
+            border-left: 160px solid transparent;
+            border-right: 160px solid transparent;
             transform-origin: top;
-            transition: transform 0.5s ease;
+            transition: transform 0.6s ease;
         }
 
+        /* ด้านหน้าซอง */
         .envelope-front {
             position: absolute;
             bottom: 0;
-            z-index: 4;
+            z-index: 9;
             width: 0;
             height: 0;
-            border-top: 100px solid transparent;
-            border-right: 150px solid var(--envelope-color);
-            border-bottom: 100px solid var(--envelope-color);
-            border-left: 150px solid #ffb3c1;
+            border-top: 110px solid transparent;
+            border-right: 160px solid var(--envelope-color);
+            border-bottom: 110px solid var(--envelope-color);
+            border-left: 160px solid #ffb3c1;
             border-radius: 0 0 5px 5px;
         }
 
+        /* สไตล์กระดาษจดหมาย */
         .paper {
             position: absolute;
             bottom: 10px;
             left: 50%;
             transform: translateX(-50%);
-            width: 270px;
-            height: 180px;
+            width: 290px;
+            height: 210px;
             background: var(--paper-color);
             padding: 20px;
             text-align: center;
-            transition: all 1s ease;
-            z-index: 2;
-            box-sizing: border-box;
             border-radius: 5px;
+            box-sizing: border-box;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275), z-index 0.1s;
         }
 
-        .open .envelope-wrapper::before {
+        /* กระดาษแผ่นที่ 1 */
+        #paper1 { z-index: 2; }
+        /* กระดาษแผ่นที่ 2 */
+        #paper2 { z-index: 1; opacity: 0; }
+
+        /* --- จังหวะที่ 1: เปิดซอง + ดึงใบแรกขึ้น + เลื่อนซองลง --- */
+        .open-step-1 #envelopeContainer {
+            transform: translateY(120px); /* เลื่อนกลุ่มซองลงมาเพื่อให้กระดาษอยู่กลางจอ */
+        }
+        .open-step-1 .envelope-wrapper::before {
             transform: rotateX(180deg);
-            z-index: 1;
+            z-index: 0;
+        }
+        .open-step-1 #paper1 {
+            transform: translate(-50%, -220px); /* ดึงใบแรกขึ้นมาให้พ้นซอง */
+            z-index: 11;
+            height: 250px;
         }
 
-        .open .paper {
-            transform: translate(-50%, -220px);
-            height: 380px;
-            width: 320px;
-            z-index: 6;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-        }
-
-        .content-area {
-            opacity: 0;
-            transition: opacity 0.5s;
-            width: 100%;
-        }
-
-        .open .content-area {
+        /* --- จังหวะที่ 2: ดึงใบที่สองมาทับ --- */
+        .open-step-2 #paper2 {
             opacity: 1;
+            z-index: 12;
+            animation: pullOutOverlay 1.2s forwards;
         }
 
-        h1 { font-size: 1.5rem; color: #5D3FD3; margin-bottom: 20px; }
-        .page-2-text { color: #FF4D6D !important; }
+        @keyframes pullOutOverlay {
+            0% { transform: translate(-50%, 0); z-index: 1; }
+            50% { transform: translate(-50%, -350px); z-index: 12; } /* ดึงขึ้นสูงเพื่อสลับชั้น */
+            100% { transform: translate(-50%, -230px); z-index: 12; height: 300px; width: 310px; } /* วางลงทับกลางจอ */
+        }
+
+        h1 { font-size: 1.4rem; color: #5D3FD3; margin: 0 0 15px 0; line-height: 1.4; }
+        .page-2-text { color: #FF4D6D !important; font-size: 1.6rem !important; }
 
         button {
-            padding: 10px 25px;
-            font-size: 1rem;
+            padding: 12px 28px;
             border: none;
             border-radius: 50px;
             cursor: pointer;
             font-family: 'Mitr', sans-serif;
-            transition: 0.2s;
+            background: #9370DB;
+            color: white;
+            font-weight: 500;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
 
-        .next-btn { background-color: #9370DB; color: white; }
-        .yes-btn { background-color: #FF4D6D; color: white; }
-        .no-btn { background-color: #A9A9A9; color: white; position: absolute; }
+        .yes-btn { background-color: #FF4D6D; margin-right: 10px; }
+        .no-btn { background-color: #A9A9A9; position: absolute; }
 
         .hidden { display: none !important; }
     </style>
@@ -152,72 +172,58 @@
 <body id="mainBody">
 
     <div id="passwordPage">
-        <h1 style="color: #5D3FD3;">วันที่เราเริ่มคุยกันคือวันที่เท่าไหร่</h1>
-        <p style="color: #666; margin-bottom: 20px;">(ใบ้ให้: ใส่เลข 4 หลักนะเทอ)</p>
+        <h1>วันที่เราเริ่มคุยกันคือวันที่เท่าไหร่</h1>
         <input type="text" id="passInput" class="pass-input" placeholder="ววดด" maxlength="4">
         <br>
-        <button class="next-btn" onclick="checkPassword()">ส่งคำตอบ</button>
+        <button onclick="checkPassword()">ส่งคำตอบ</button>
     </div>
 
     <div id="envelopeContainer">
         <div class="envelope-wrapper" id="envelopeWrapper">
             <div class="envelope-front"></div>
-            <div class="paper" id="mainPaper">
-                
-                <div id="innerP1" class="content-area">
-                    <h1>เทอคะเค้ามีอะไรจะถาม</h1>
-                    <button class="next-btn" onclick="pullPaperMore()">--></button>
-                </div>
-
-                <div id="innerP2" class="content-area hidden">
-                    <h1 id="questionText" class="page-2-text">เทอเป็นแฟนกับเค้าไหม</h1>
-                    <div id="btnGroup">
-                        <button class="yes-btn" onclick="celebrate()">ตกลง</button>
-                        <button id="noBtn" class="no-btn" onmouseover="moveNoButton()" onclick="moveNoButton()">ไม่ตกลง</button>
-                    </div>
-                </div>
-
+            
+            <div class="paper" id="paper1">
+                <h1>เทอคะเค้ามีอะไรจะถาม</h1>
+                <button onclick="pullSecondPaper()">--></button>
             </div>
+
+            <div class="paper" id="paper2">
+                <h1 id="questionText" class="page-2-text">เทอเป็นแฟนกับเค้าไหม</h1>
+                <div id="btnGroup">
+                    <button class="yes-btn" onclick="celebrate()">ตกลง</button>
+                    <button id="noBtn" class="no-btn" onmouseover="moveNoButton()" onclick="moveNoButton()">ไม่ตกลง</button>
+                </div>
+            </div>
+
         </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <script>
-        // ฟังก์ชันตรวจสอบรหัสผ่าน
         function checkPassword() {
             const pass = document.getElementById('passInput').value;
-            if (pass === "1402") { // ตั้งรหัสเป็น 1402
+            if (pass === "1402") {
                 document.getElementById('passwordPage').style.display = 'none';
                 document.getElementById('envelopeContainer').style.display = 'block';
-                
+                // เริ่มอนิเมชั่นเปิดซองและเลื่อนซองลง
                 setTimeout(() => {
-                    document.getElementById('envelopeWrapper').classList.add('open');
-                }, 500);
+                    document.body.classList.add('open-step-1');
+                }, 300);
             } else {
                 alert("คำตอบผิดนะเทอ ลองนึกใหม่สิคะ!");
             }
         }
 
-        function pullPaperMore() {
-            const body = document.getElementById('mainBody');
-            const p1 = document.getElementById('innerP1');
-            const p2 = document.getElementById('innerP2');
-
-            p1.style.opacity = '0';
-            setTimeout(() => {
-                p1.classList.add('hidden');
-                p2.classList.remove('hidden');
-                body.style.backgroundColor = '#FFD1DC';
-                setTimeout(() => {
-                    p2.style.opacity = '1';
-                }, 50);
-            }, 400);
+        function pullSecondPaper() {
+            document.body.classList.add('open-step-2');
+            document.getElementById('mainBody').style.backgroundColor = '#FFD1DC';
         }
 
         function moveNoButton() {
             const btn = document.getElementById('noBtn');
-            const x = Math.random() * (window.innerWidth - 150);
-            const y = Math.random() * (window.innerHeight - 100);
+            // จำกัดขอบเขตการหนีให้อยู่ในหน้าจอ
+            const x = Math.random() * (window.innerWidth - 120);
+            const y = Math.random() * (window.innerHeight - 60);
             btn.style.left = x + 'px';
             btn.style.top = y + 'px';
         }
@@ -229,7 +235,7 @@
 
             var duration = 5 * 1000;
             var animationEnd = Date.now() + duration;
-            var defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 10 };
+            var defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 30 };
 
             function randomInRange(min, max) { return Math.random() * (max - min) + min; }
 
