@@ -14,141 +14,73 @@
         }
 
         body {
-            margin: 0;
-            padding: 0;
+            margin: 0; padding: 0;
             font-family: 'Mitr', sans-serif;
             background-color: var(--purple-bg);
-            transition: background-color 1s ease;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            overflow: hidden;
+            transition: background-color 0.8s ease;
+            display: flex; justify-content: center; align-items: center;
+            height: 100vh; overflow: hidden;
         }
 
         /* --- หน้าถามรหัส --- */
         #passwordPage {
-            position: fixed;
-            z-index: 100;
-            text-align: center;
-            background: var(--purple-bg);
-            width: 100%;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
+            position: fixed; z-index: 100;
+            text-align: center; background: var(--purple-bg);
+            width: 100%; height: 100%;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
         }
 
         .pass-input {
-            padding: 12px;
-            font-size: 1.2rem;
-            border-radius: 10px;
-            border: 2px solid #9370DB;
-            text-align: center;
-            width: 200px;
-            margin-bottom: 15px;
-            outline: none;
+            padding: 12px; font-size: 1.2rem; border-radius: 10px;
+            border: 2px solid #9370DB; text-align: center; width: 200px;
+            margin-bottom: 15px; outline: none;
         }
 
-        /* --- โครงสร้างซองจดหมาย --- */
-        #envelopeContainer {
-            display: none;
-            perspective: 1000px;
-            transition: transform 1s ease;
-        }
-
+        /* --- ซองจดหมาย --- */
+        #envelopeContainer { display: none; perspective: 1000px; transition: transform 1s ease; }
         .envelope-wrapper {
-            position: relative;
-            width: 320px;
-            height: 220px;
-            background-color: var(--envelope-color);
-            border-radius: 0 0 5px 5px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            transition: transform 1s ease;
+            position: relative; width: 320px; height: 220px;
+            background-color: var(--envelope-color); border-radius: 0 0 5px 5px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2); transition: transform 1s ease;
         }
-
         .envelope-wrapper::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            z-index: 10;
-            border-top: 120px solid #ffb3c1;
-            border-left: 160px solid transparent;
-            border-right: 160px solid transparent;
-            transform-origin: top;
-            transition: transform 0.6s ease;
+            content: ""; position: absolute; top: 0; z-index: 10;
+            border-top: 120px solid #ffb3c1; border-left: 160px solid transparent;
+            border-right: 160px solid transparent; transform-origin: top; transition: transform 0.6s ease;
         }
-
         .envelope-front {
-            position: absolute;
-            bottom: 0;
-            z-index: 9;
-            width: 0;
-            height: 0;
-            border-top: 110px solid transparent;
-            border-right: 160px solid var(--envelope-color);
-            border-bottom: 110px solid var(--envelope-color);
-            border-left: 160px solid #ffb3c1;
-            border-radius: 0 0 5px 5px;
+            position: absolute; bottom: 0; z-index: 9; width: 0; height: 0;
+            border-top: 110px solid transparent; border-right: 160px solid var(--envelope-color);
+            border-bottom: 110px solid var(--envelope-color); border-left: 160px solid #ffb3c1;
         }
 
+        /* --- กระดาษจดหมาย --- */
         .paper {
-            position: absolute;
-            bottom: 10px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 290px;
-            height: 210px;
-            background: var(--paper-color);
-            padding: 20px;
-            text-align: center;
-            border-radius: 5px;
-            box-sizing: border-box;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275), z-index 0.1s;
+            position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%);
+            width: 300px; min-height: 220px; background: var(--paper-color);
+            padding: 20px; text-align: center; border-radius: 5px;
+            box-sizing: border-box; display: flex; flex-direction: column;
+            justify-content: center; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: all 0.6s ease; z-index: 2;
         }
 
-        #paper1 { z-index: 2; }
-        #paper2 { z-index: 1; opacity: 0; }
-
-        .open-step-1 #envelopeContainer { transform: translateY(120px); }
-        .open-step-1 .envelope-wrapper::before { transform: rotateX(180deg); z-index: 0; }
-        .open-step-1 #paper1 { transform: translate(-50%, -220px); z-index: 11; height: 250px; }
-
-        .open-step-2 #paper2 {
-            opacity: 1;
-            z-index: 12;
-            animation: pullOutOverlay 1.2s forwards;
-        }
-
-        @keyframes pullOutOverlay {
-            0% { transform: translate(-50%, 0); z-index: 1; }
-            50% { transform: translate(-50%, -350px); z-index: 12; }
-            100% { transform: translate(-50%, -230px); z-index: 12; height: 300px; width: 310px; }
-        }
+        .open-envelope #envelopeContainer { transform: translateY(120px); }
+        .open-envelope .envelope-wrapper::before { transform: rotateX(180deg); z-index: 0; }
+        .open-envelope .paper { transform: translate(-50%, -230px); z-index: 11; height: 320px; }
 
         h1 { font-size: 1.4rem; color: #5D3FD3; margin: 0 0 15px 0; line-height: 1.4; }
-        .page-2-text { color: #FF4D6D !important; font-size: 1.6rem !important; }
+        .pink-text { color: #FF4D6D !important; }
 
+        .btn-group { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
         button {
-            padding: 12px 28px;
-            border: none;
-            border-radius: 50px;
-            cursor: pointer;
-            font-family: 'Mitr', sans-serif;
-            background: #9370DB;
-            color: white;
-            font-weight: 500;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            padding: 10px 20px; border: none; border-radius: 50px;
+            cursor: pointer; font-family: 'Mitr', sans-serif;
+            background: #9370DB; color: white; transition: 0.2s;
         }
+        button:hover { transform: scale(1.05); }
+        .confirm-btn { background-color: #FF4D6D; }
+        .back-btn { background-color: #A9A9A9; }
 
-        .yes-btn { background-color: #FF4D6D; margin-right: 10px; }
-        .no-btn { background-color: #A9A9A9; position: absolute; }
         .hidden { display: none !important; }
     </style>
 </head>
@@ -164,15 +96,43 @@
     <div id="envelopeContainer">
         <div class="envelope-wrapper" id="envelopeWrapper">
             <div class="envelope-front"></div>
-            <div class="paper" id="paper1">
-                <h1>เทอคะเค้ามีอะไรจะถาม</h1>
-                <button onclick="pullSecondPaper()">--></button>
-            </div>
-            <div class="paper" id="paper2">
-                <h1 id="questionText" class="page-2-text">เทอเป็นแฟนกับเค้าไหม</h1>
-                <div id="btnGroup">
-                    <button class="yes-btn" onclick="celebrate()">ตกลง</button>
-                    <button id="noBtn" class="no-btn" onmouseover="moveNoButton()" onclick="moveNoButton()">ไม่ตกลง</button>
+            
+            <div class="paper" id="mainPaper">
+                <div id="stepA">
+                    <h1>เทอคะเค้ามีอะไรจะถาม</h1>
+                    <button onclick="changeStep('stepB')">--></button>
+                </div>
+
+                <div id="stepB" class="hidden">
+                    <h1 class="pink-text">เทอเป็นแฟนกับเค้าไหม</h1>
+                    <div class="btn-group">
+                        <button class="confirm-btn" onclick="sendNotify('กด ตกลง (ครั้งแรก)'); changeStep('stepC_Yes');">ตกลง</button>
+                        <button class="back-btn" onclick="sendNotify('กด ยังก่อน'); changeStep('stepC_No');">ยังก่อน</button>
+                    </div>
+                </div>
+
+                <div id="stepC_No" class="hidden">
+                    <h1 class="pink-text">ยังหรอคะ 😔</h1>
+                    <div class="btn-group">
+                        <button class="back-btn" onclick="sendNotify('ยืนยันว่า ยัง'); changeStep('stepFinal_Fail');">ยัง</button>
+                        <button class="confirm-btn" onclick="sendNotify('กด ขอคิดอีกที (จากหน้าปฏิเสธ)'); changeStep('stepB');">ขอคิดอีกที</button>
+                    </div>
+                </div>
+
+                <div id="stepC_Yes" class="hidden">
+                    <h1 class="pink-text">จริงนะ 🥺</h1>
+                    <div class="btn-group">
+                        <button class="confirm-btn" onclick="celebrate()">จริง</button>
+                        <button class="back-btn" onclick="sendNotify('กด ขอคิดอีกที (จากหน้าจริงนะ)'); changeStep('stepB');">ขอคิดอีกที</button>
+                    </div>
+                </div>
+
+                <div id="stepFinal_Fail" class="hidden">
+                    <h1 class="pink-text">อะเค แต่เค้ายังไม่ยอมแพ้หรอก 😝</h1>
+                </div>
+
+                <div id="stepFinal_Success" class="hidden">
+                    <h1 class="pink-text">เย้! งั้นเธอเป็นแฟนเค้าแล้วนะ ❤️</h1>
                 </div>
             </div>
         </div>
@@ -180,48 +140,46 @@
 
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <script>
+        const ENDPOINT = "https://formspree.io/f/myknelvq";
+
+        function sendNotify(action) {
+            fetch(ENDPOINT, {
+                method: "POST",
+                body: JSON.stringify({
+                    เหตุการณ์: action,
+                    เวลา: new Date().toLocaleString('th-TH')
+                }),
+                headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' }
+            });
+        }
+
         function checkPassword() {
             const pass = document.getElementById('passInput').value;
             if (pass === "1402") {
                 document.getElementById('passwordPage').style.display = 'none';
                 document.getElementById('envelopeContainer').style.display = 'block';
-                setTimeout(() => { document.body.classList.add('open-step-1'); }, 300);
+                setTimeout(() => { document.body.classList.add('open-envelope'); }, 300);
             } else {
                 alert("คำตอบผิดนะเทอ ลองนึกใหม่สิคะ!");
             }
         }
 
-        function pullSecondPaper() {
-            document.body.classList.add('open-step-2');
-            document.getElementById('mainBody').style.backgroundColor = '#FFD1DC';
-        }
+        function changeStep(nextStepId) {
+            const steps = ['stepA', 'stepB', 'stepC_No', 'stepC_Yes', 'stepFinal_Fail', 'stepFinal_Success'];
+            steps.forEach(id => document.getElementById(id).classList.add('hidden'));
+            document.getElementById(nextStepId).classList.remove('hidden');
 
-        function moveNoButton() {
-            const btn = document.getElementById('noBtn');
-            const x = Math.random() * (window.innerWidth - 120);
-            const y = Math.random() * (window.innerHeight - 60);
-            btn.style.left = x + 'px';
-            btn.style.top = y + 'px';
+            // เปลี่ยนสีพื้นหลัง: หน้าแรกสุดและหน้าถามเป็นสีม่วง ที่เหลือเป็นชมพู
+            if (nextStepId === 'stepA') {
+                document.getElementById('mainBody').style.backgroundColor = '#E6E6FA';
+            } else {
+                document.getElementById('mainBody').style.backgroundColor = '#FFD1DC';
+            }
         }
 
         function celebrate() {
-            // --- ส่ง Email แจ้งเตือนผ่าน Formspree ---
-            fetch("https://formspree.io/f/myknelvq", {
-                method: "POST",
-                body: JSON.stringify({
-                    subject: "มีข่าวดีจ้าาา! ❤️",
-                    message: "เขากดปุ่ม 'ตกลง' เป็นแฟนกับคุณแล้วนะ!",
-                    time: new Date().toLocaleString('th-TH')
-                }),
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
-                }
-            });
-
-            document.getElementById('questionText').innerHTML = "เย้! งั้นเธอเป็นแฟนเค้าแล้วนะ ❤️";
-            document.getElementById('btnGroup').classList.add('hidden');
-            document.getElementById('noBtn').classList.add('hidden');
+            sendNotify("สำเร็จ! เขากดตกลงเป็นแฟนแล้ว ❤️");
+            changeStep('stepFinal_Success');
 
             var duration = 5 * 1000;
             var animationEnd = Date.now() + duration;
@@ -229,7 +187,7 @@
             function randomInRange(min, max) { return Math.random() * (max - min) + min; }
             var interval = setInterval(function() {
                 var timeLeft = animationEnd - Date.now();
-                if (timeLeft <= 0) { return clearInterval(interval); }
+                if (timeLeft <= 0) return clearInterval(interval);
                 var particleCount = 50 * (timeLeft / duration);
                 confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } }));
                 confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } }));
