@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="th">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -22,7 +22,6 @@
             height: 100vh; overflow: hidden;
         }
 
-        /* --- หน้าถามรหัส --- */
         #passwordPage {
             position: fixed; z-index: 100;
             text-align: center; background: var(--purple-bg);
@@ -36,25 +35,38 @@
             margin-bottom: 15px; outline: none;
         }
 
-        /* --- ซองจดหมาย --- */
         #envelopeContainer { display: none; perspective: 1000px; transition: transform 1s ease; }
         .envelope-wrapper {
             position: relative; width: 320px; height: 220px;
             background-color: var(--envelope-color); border-radius: 0 0 5px 5px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.2); transition: transform 1s ease;
         }
+        
+        @media (max-width: 360px) {
+            .envelope-wrapper { width: 280px; height: 192.5px; }
+            .paper { width: 260px !important; min-height: 192.5px !important; }
+        }
+
         .envelope-wrapper::before {
             content: ""; position: absolute; top: 0; z-index: 10;
             border-top: 120px solid #ffb3c1; border-left: 160px solid transparent;
             border-right: 160px solid transparent; transform-origin: top; transition: transform 0.6s ease;
         }
+        
+        @media (max-width: 360px) {
+            .envelope-wrapper::before { border-top-width: 105px; border-left-width: 140px; border-right-width: 140px; }
+        }
+
         .envelope-front {
             position: absolute; bottom: 0; z-index: 9; width: 0; height: 0;
             border-top: 110px solid transparent; border-right: 160px solid var(--envelope-color);
             border-bottom: 110px solid var(--envelope-color); border-left: 160px solid #ffb3c1;
         }
+        
+        @media (max-width: 360px) {
+            .envelope-front { border-top-width: 96.25px; border-right-width: 140px; border-bottom-width: 96.25px; border-left-width: 140px; }
+        }
 
-        /* --- กระดาษจดหมาย --- */
         .paper {
             position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%);
             width: 300px; min-height: 220px; background: var(--paper-color);
@@ -68,10 +80,19 @@
         .open-envelope .envelope-wrapper::before { transform: rotateX(180deg); z-index: 0; }
         .open-envelope .paper { transform: translate(-50%, -230px); z-index: 11; height: 320px; }
 
+        @media (max-width: 360px) {
+            .open-envelope .paper { height: 280px; }
+        }
+
         h1 { font-size: 1.4rem; color: #5D3FD3; margin: 0 0 15px 0; line-height: 1.4; }
+        
+        @media (max-width: 360px) {
+            h1 { font-size: 1.2rem; }
+        }
+        
         .pink-text { color: #FF4D6D !important; }
 
-        .btn-group { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+        .btn-group { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; align-items: center; min-height: 80px; width: 100%; }
         button {
             padding: 10px 20px; border: none; border-radius: 50px;
             cursor: pointer; font-family: 'Mitr', sans-serif;
@@ -82,15 +103,45 @@
         .back-btn { background-color: #A9A9A9; }
 
         .hidden { display: none !important; }
+        
+        #stepFinal_Success {
+            position: relative;
+            padding: 40px 20px;
+            width: 100%;
+            height: 100%;
+            box-sizing: border-box;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .rose {
+            position: absolute;
+            font-size: 3rem; 
+        }
+        
+        @media (max-width: 360px) {
+            .rose { font-size: 2.5rem; }
+        }
+
+        .rose-left {
+            bottom: 10px;
+            left: 10px;
+        }
+
+        .rose-right {
+            bottom: 10px;
+            right: 10px;
+        }
     </style>
 </head>
 <body id="mainBody">
 
     <div id="passwordPage">
-        <h1>วันที่เราเริ่มคุยกันคือวันที่เท่าไหร่</h1>
-        <input type="text" id="passInput" class="pass-input" placeholder="ววดด" maxlength="4">
+        <h1>On what date did we start talking?</h1>
+        <input type="text" id="passInput" class="pass-input" placeholder="DDMM" maxlength="4">
         <br>
-        <button onclick="checkPassword()">ส่งคำตอบ</button>
+        <button onclick="checkPassword()">Submit</button>
     </div>
 
     <div id="envelopeContainer">
@@ -99,40 +150,42 @@
             
             <div class="paper" id="mainPaper">
                 <div id="stepA">
-                    <h1>เทอคะเค้ามีอะไรจะถาม</h1>
+                    <h1>Hey, I have a question for you...</h1>
                     <button onclick="changeStep('stepB')">--></button>
                 </div>
 
                 <div id="stepB" class="hidden">
-                    <h1 class="pink-text">เทอเป็นแฟนกับเค้าไหม</h1>
+                    <h1 class="pink-text">Will you be my partner?</h1>
                     <div class="btn-group">
-                        <button class="confirm-btn" onclick="sendNotify('กด ตกลง (ครั้งแรก)'); changeStep('stepC_Yes');">ตกลง</button>
-                        <button class="back-btn" onclick="sendNotify('กด ยังก่อน'); changeStep('stepC_No');">ยังก่อน</button>
+                        <button class="confirm-btn" onclick="changeStep('stepC_Yes')">Yes</button>
+                        <button class="back-btn" onclick="changeStep('stepC_No')">Not yet</button>
                     </div>
                 </div>
 
                 <div id="stepC_No" class="hidden">
-                    <h1 class="pink-text">ยังหรอคะ 😔</h1>
-                    <div class="btn-group">
-                        <button class="back-btn" onclick="sendNotify('ยืนยันว่า ยัง'); changeStep('stepFinal_Fail');">ยัง</button>
-                        <button class="confirm-btn" onclick="sendNotify('กด ขอคิดอีกที (จากหน้าปฏิเสธ)'); changeStep('stepB');">ขอคิดอีกที</button>
+                    <h1 class="pink-text">Not yet? 😔</h1>
+                    <div class="btn-group" style="position: relative;">
+                        <button id="noBtn" class="back-btn" onclick="handleNoClick()" style="position: relative; transition: 0.2s ease;">No</button>
+                        <button class="confirm-btn" onclick="resetNoButton(); changeStep('stepB');">Let me think again</button>
                     </div>
                 </div>
 
                 <div id="stepC_Yes" class="hidden">
-                    <h1 class="pink-text">จริงนะ 🥺</h1>
+                    <h1 class="pink-text">Are you sure? 🥺</h1>
                     <div class="btn-group">
-                        <button class="confirm-btn" onclick="celebrate()">จริง</button>
-                        <button class="back-btn" onclick="sendNotify('กด ขอคิดอีกที (จากหน้าจริงนะ)'); changeStep('stepB');">ขอคิดอีกที</button>
+                        <button class="confirm-btn" onclick="celebrate()">Yes, I'm sure</button>
+                        <button class="back-btn" onclick="changeStep('stepB')">Wait, let me think</button>
                     </div>
                 </div>
 
                 <div id="stepFinal_Fail" class="hidden">
-                    <h1 class="pink-text">อะเค แต่เค้ายังไม่ยอมแพ้หรอก 😝</h1>
+                    <h1 class="pink-text">Okay, but I'm not giving up! 😝</h1>
                 </div>
 
                 <div id="stepFinal_Success" class="hidden">
-                    <h1 class="pink-text">เย้! งั้นเธอเป็นแฟนเค้าแล้วนะ ❤️</h1>
+                    <h1 class="pink-text">Yay! We are officially together now ❤️</h1>
+                    <span class="rose rose-left">🌹</span>
+                    <span class="rose rose-right">🌹</span>
                 </div>
             </div>
         </div>
@@ -141,13 +194,14 @@
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <script>
         const ENDPOINT = "https://formspree.io/f/myknelvq";
+        let moveCount = 0;
 
-        function sendNotify(action) {
+        function sendNotify(result) {
             fetch(ENDPOINT, {
                 method: "POST",
                 body: JSON.stringify({
-                    เหตุการณ์: action,
-                    เวลา: new Date().toLocaleString('th-TH')
+                    status: result,
+                    time: new Date().toLocaleString()
                 }),
                 headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' }
             });
@@ -160,7 +214,7 @@
                 document.getElementById('envelopeContainer').style.display = 'block';
                 setTimeout(() => { document.body.classList.add('open-envelope'); }, 300);
             } else {
-                alert("คำตอบผิดนะเทอ ลองนึกใหม่สิคะ!");
+                alert("That's wrong! Try to remember again.");
             }
         }
 
@@ -169,7 +223,6 @@
             steps.forEach(id => document.getElementById(id).classList.add('hidden'));
             document.getElementById(nextStepId).classList.remove('hidden');
 
-            // เปลี่ยนสีพื้นหลัง: หน้าแรกสุดและหน้าถามเป็นสีม่วง ที่เหลือเป็นชมพู
             if (nextStepId === 'stepA') {
                 document.getElementById('mainBody').style.backgroundColor = '#E6E6FA';
             } else {
@@ -177,10 +230,28 @@
             }
         }
 
-        function celebrate() {
-            sendNotify("สำเร็จ! เขากดตกลงเป็นแฟนแล้ว ❤️");
-            changeStep('stepFinal_Success');
+        function handleNoClick() {
+            const noBtn = document.getElementById('noBtn');
+            if (moveCount < 3) {
+                const randomX = Math.floor(Math.random() * 100) - 50; 
+                const randomY = Math.floor(Math.random() * 60) - 30;
+                noBtn.style.transform = `translate(${randomX}px, ${randomY}px)`;
+                moveCount++;
+            } else {
+                sendNotify("Result: NO (Pressed No after dodging)");
+                changeStep('stepFinal_Fail');
+            }
+        }
 
+        function resetNoButton() {
+            moveCount = 0;
+            const noBtn = document.getElementById('noBtn');
+            noBtn.style.transform = `translate(0, 0)`;
+        }
+
+        function celebrate() {
+            sendNotify("Result: YES ❤️");
+            changeStep('stepFinal_Success');
             var duration = 5 * 1000;
             var animationEnd = Date.now() + duration;
             var defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 30 };
@@ -193,6 +264,10 @@
                 confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } }));
             }, 250);
         }
+
+        document.getElementById('passInput').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') checkPassword();
+        });
     </script>
 </body>
 </html>
